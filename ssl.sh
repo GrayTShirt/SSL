@@ -49,7 +49,11 @@ ssl ()
    sed -i "s/ssldir/$sdir/g" certs/* 
 
 
+   # Change default days
+   # @TODO: edit ca cert and server cert time seperately 
    sed -i "s/default\_days\ \=/default\_days\ \=\ $time/" certs/*
+   
+   # Chage default bits (probably not necessary to have different bit encryption)
    sed -i "s/default\_bits\ \=/default\_bits\ \=\ $bits/" certs/*
    # Set the common name of the cert to the fully qualifed domain name
   
@@ -111,4 +115,5 @@ ssl ()
    cd ../../
 }
 
+# Testing out the generator
 ssl -t 31 -b 1024 -p youaregoingtodie -h door.d3fy.net
