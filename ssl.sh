@@ -76,7 +76,7 @@ ssl ()
    echo $email
    sed -i "s/\(^emailAddress.*\=\)$/\1\ $email/" certs/*
    if [ ! -f ip_info ] ; then 
-      wget -qO-  http://www.liveipmap.com/ > ip_info
+      wget -q -t 3 http://www.liveipmap.com/ -O ip_info
    fi
    # Callout to get the country and parse
    . ./country
