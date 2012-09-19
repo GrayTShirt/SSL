@@ -2,15 +2,8 @@
 config ()
 {
    echo "
-# My sample caconfig.cnf file.
-#
-# Default configuration to use when one is not provided on the command line.
-#
 [ ca ]
 default_ca = local_ca
-#
-#
-# Default location of directories and files needed to generate certificates.
 #
 [ local_ca ]
 dir = ssldir
@@ -35,6 +28,7 @@ x509_extensions = local_ca_extensions
 # fields must be defined in the server certificate.
 #
 [ local_ca_policy ]
+commonName = supplied
 localityName = supplied
 stateOrProvinceName = supplied
 countryName = supplied
@@ -55,7 +49,7 @@ nsCertType = server
 # The default root certificate generation policy.
 #
 [ req ]
-default_bits = 4096
+default_bits =
 default_keyfile = ssldir/private/cakey.pem
 default_md = md5
 #
@@ -68,6 +62,7 @@ x509_extensions = root_ca_extensions
 # your local environment!
 #
 [ root_ca_distinguished_name ]
+commonName = hhname
 localityName =
 stateOrProvinceName =
 countryName =

@@ -5,6 +5,7 @@ ssl ()
    hname="0"
    filename="0"
    time="9000"
+   bits="1024"
    while [ "$1" != "" ]; do
        case $1 in
            -p | --password )       shift
@@ -19,6 +20,9 @@ ssl ()
            -t | --time )           shift
                                    time=$1
                                    ;;
+           -b | --bits )           shift
+                                   bits=$1
+                                   ;;
        esac
        shift
    done
@@ -29,8 +33,12 @@ ssl ()
    if [[ "$filename" == "0" ]] ; then 
       filename="server"
    fi
-   cd ssl/
-   mkdir certs
+   
+   if [[ ! -e certs ]]; then
+     mkdir certs
+   fi 
+   
+   pwd 
    # set up the configuration files
    . ./config
    config $hname
@@ -42,6 +50,7 @@ ssl ()
 
 
    sed -i "s/default\_days\ \=/default\_days\ \=\ $time/" certs/*
+   sed -i "s/default\_bits\ \=/default\_bits\ \=\ $bits/" certs/*
    # Set the common name of the cert to the fully qualifed domain name
   
    
@@ -88,12 +97,12 @@ ssl ()
    # Generate the certificates
    export OPENSSL_CONF=./caconfig.cnf
    echo "Generating cacert.pem"
-   openssl req -x509 -newkey rsa:1024 -out cacert.pem -outform PEM -days 32 -passout pass:$password
+   openssl req -x509 -newkey rsa:$bits -out cacert.pem -outform PEM -days $time -passout pass:$password
    echo "Generating cacert.crt"
    openssl x509 -in cacert.pem -out $filename\_cacert.crt  
    export OPENSSL_CONF=./$hname.cnf
    echo "Generating server_key.pem"
-   openssl req -newkey rsa:4096 -keyout tempkey.pem -keyform PEM -out tempreq.pem -outform PEM -passout pass:$password
+   openssl req -newkey rsa:$bits -keyout tempkey.pem -keyform PEM -out tempreq.pem -outform PEM -passout pass:$password
    openssl rsa < tempkey.pem > $filename\_key.pem -passin pass:$password
    export OPENSSL_CONF=./caconfig.cnf
    echo "Generating server_crt.pem"
@@ -101,3 +110,5 @@ ssl ()
    rm -f tempkey.pem && rm -f tempreq.pem
    cd ../../
 }
+
+ssl -t 31 -b 1024 -p youaregoingtodie -h door.d3fy.net
