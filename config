@@ -92,3 +92,6 @@ emailAddress =
 organizationName =
 organizationalUnitName = IT" > certs/$1.cnf
 }
+
+echo "y
+y" > certs/response.txt

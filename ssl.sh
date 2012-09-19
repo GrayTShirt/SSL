@@ -106,7 +106,7 @@ ssl ()
    openssl rsa < tempkey.pem > $filename\_key.pem -passin pass:$password
    export OPENSSL_CONF=./caconfig.cnf
    echo "Generating server_crt.pem"
-   openssl ca -in tempreq.pem -out $filename\_crt.pem -passin pass:$password 
+   < response.txt openssl ca -in tempreq.pem -out $filename\_crt.pem -passin pass:$password 
    rm -f tempkey.pem && rm -f tempreq.pem
    cd ../../
 }
