@@ -4,7 +4,8 @@ ssl ()
 {
    hname="0"
    filename="0"
-   time="9000"
+   catime="9000"
+   stime="31"
    bits="1024"
    while [ "$1" != "" ]; do
        case $1 in
@@ -17,9 +18,12 @@ ssl ()
            -f | --file )           shift
                                    filename=$1
                                    ;;
-           -t | --time )           shift
-                                   time=$1
+           -t | --catime )         shift
+                                   catime=$1
                                    ;;
+           -s | --stime )          shift
+                                   stime=$1
+                                   ;;                                   
            -b | --bits )           shift
                                    bits=$1
                                    ;;
@@ -50,8 +54,8 @@ ssl ()
 
 
    # Change default days
-   # @TODO: edit ca cert and server cert time seperately 
-   sed -i "s/default\_days\ \=/default\_days\ \=\ $time/" certs/*
+   sed -i "s/default\_days\ \=/default\_days\ \=\ $catime/" certs/caconfig.cnf
+   sed -i "s/default\_days\ \=/default\_days\ \=\ $stime/" certs/$hname.cnf
    
    # Chage default bits (probably not necessary to have different bit encryption)
    sed -i "s/default\_bits\ \=/default\_bits\ \=\ $bits/" certs/*
@@ -64,7 +68,7 @@ ssl ()
    # echo $domain
    sed -i "s/hhname/$hnamen/g" certs/*
 
-   # Set the organization name to the domain name with out the tld
+   # Set the organization name to the domain name without the tld
    orgname=`echo $domain | sed 's/\(^.*\)\\\.*$/\U\1/'`
    # echo $orgname
    sed -i "s/\(^organizationName.*\=\)$/\1\ $orgname/" certs/*
@@ -110,10 +114,12 @@ ssl ()
    openssl rsa < tempkey.pem > $filename\_key.pem -passin pass:$password
    export OPENSSL_CONF=./caconfig.cnf
    echo "Generating server_crt.pem"
+   # This is the 01 in signedcerts, preformed diff file is absoluetly the same
+   # Will need devise generating plan
    < response.txt openssl ca -in tempreq.pem -out $filename\_crt.pem -passin pass:$password 
    rm -f tempkey.pem && rm -f tempreq.pem
    cd ../../
 }
 
 # Testing out the generator
-ssl -t 31 -b 1024 -p youaregoingtodie -h door.d3fy.net
+ssl -t 365 -s 31 -b 1024 -p youaregoingtodie -h door.d3fy.net
