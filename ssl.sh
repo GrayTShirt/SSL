@@ -5,7 +5,7 @@ ssl ()
    hname="0"
    filename="0"
    catime="9000"
-   stime="31"
+   stime="9000"
    bits="1024"
    while [ "$1" != "" ]; do
        case $1 in
@@ -122,4 +122,4 @@ ssl ()
 }
 
 # Testing out the generator
-ssl -t 365 -s 31 -b 1024 -p youaregoingtodie -h door.d3fy.net
+# ssl -t 365 -s 31 -b 1024 -p youaregoingtodie -h door.d3fy.net
