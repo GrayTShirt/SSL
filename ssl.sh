@@ -2,41 +2,42 @@
 
 ssl () 
 {
-   hname="0"
-   filename="0"
-   catime="9000"
-   stime="9000"
-   bits="1024"
-   while [ "$1" != "" ]; do
-       case $1 in
-           -p | --password )       shift
-                                   password=$1
+  echo $0
+  hname="0"
+  filename="0"
+  catime="9000"
+  stime="9000"
+  bits="1024"
+  while [ "$1" != "" ]; do
+    case $1 in
+      -p | --password )       shift
+                              password=$1
+                              ;;
+      -h | --hostname )       shift
+                              hname=$1
+                              ;;
+      -f | --file )           shift
+                              filename=$1
                                    ;;
-           -h | --hostname )       shift
-                                   hname=$1
-                                   ;;
-           -f | --file )           shift
-                                   filename=$1
-                                   ;;
-           -t | --catime )         shift
+      -t | --catime )         shift
                                    catime=$1
                                    ;;
-           -s | --stime )          shift
+      -s | --stime )          shift
                                    stime=$1
                                    ;;                                   
-           -b | --bits )           shift
+      -b | --bits )           shift
                                    bits=$1
                                    ;;
-       esac
-       shift
-   done
+    esac
+   shift
+  done
 
-   if [[ "$hname" == "0" ]] ; then 
-      hname=`hostname -f`
-   fi
-   if [[ "$filename" == "0" ]] ; then 
-      filename="server"
-   fi
+  if [[ "$hname" == "0" ]] ; then 
+    hname=`hostname -f`
+  fi
+  if [[ "$filename" == "0" ]] ; then 
+    filename="server"
+  fi
    
    if [[ ! -e certs ]]; then
      mkdir certs
@@ -44,7 +45,7 @@ ssl ()
    
    pwd 
    # set up the configuration files
-   . ./config
+   . $0/config
    config $hname
 
    # Set the static file path in the script
