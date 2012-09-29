@@ -50,6 +50,7 @@ ssl ()
 
    # Set the static file path in the script
    sdir=`pwd -P`/certs
+   echo "sdir: $sdir"
    sdir=`echo $sdir | sed -e 's/\//\\\\\//g'`
    sed -i "s/ssldir/$sdir/g" certs/* 
 
