@@ -45,7 +45,7 @@ ssl ()
    
    pwd 
    # set up the configuration files
-   . $0/config
+   . ./config
    config $hname
 
    # Set the static file path in the script
