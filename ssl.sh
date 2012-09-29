@@ -105,7 +105,7 @@ ssl ()
    # Generate the certificates
    export OPENSSL_CONF=./caconfig.cnf
    echo "Generating cacert.pem"
-   openssl req -x509 -newkey rsa:$bits -out cacert.pem -outform PEM -days $time -passout pass:$password
+   openssl req -x509 -newkey rsa:$bits -out cacert.pem -outform PEM -days $catime -passout pass:$password
    echo "Generating cacert.crt"
    openssl x509 -in cacert.pem -out $filename\_cacert.crt  
    export OPENSSL_CONF=./$hname.cnf
@@ -122,4 +122,4 @@ ssl ()
 }
 
 # Testing out the generator
-# ssl -t 365 -s 31 -b 1024 -p youaregoingtodie -h door.d3fy.net
+ssl -t 365 -s 31 -b 1024 -p youaregoingtodie -h door.d3fy.net
