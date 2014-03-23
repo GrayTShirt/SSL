@@ -16,7 +16,5 @@ SSL GENERATOR
 TODO
 ====
 
-    1) Learn C with QT Creator
-    2) Write simple unix daemon
-    3) Add Usage function to ssl.sh
+    1) Rewrite in Perl / Decom in Favor of a Perl mod
 
