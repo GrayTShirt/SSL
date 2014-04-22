@@ -1,37 +1,37 @@
 #!/bin/bash
 
-ssl () 
+ssl ()
 {
-  hname="0"
-  filename="0"
-  catime="9000"
-  stime="9000"
-  bits="1024"
-  while [ "$1" != "" ]; do
-    case $1 in
-      -p | --password )       shift
+	hname="0"
+	filename="0"
+	catime="365"
+	stime="30"
+	bits="4096"
+	while [ "$1" != "" ]; do
+		case $1 in
+			-p | --password ) shift
                               password=$1
                               ;;
-      -h | --hostname )       shift
-                              hname=$1
-                              ;;
-      -f | --file )           shift
-                              filename=$1
-                                   ;;
-      -t | --catime )         shift
-                                   catime=$1
-                                   ;;
-      -s | --stime )          shift
-                                   stime=$1
-                                   ;;                                   
-      -b | --bits )           shift
-                                   bits=$1
-                                   ;;
-    esac
-   shift
-  done
+			-h | --hostname ) shift
+				hname=$1
+				;;
+			-f | --file ) shift
+				filename=$1
+				;;
+			-t | --catime ) shift
+				catime=$1
+				;;
+			-s | --stime ) shift
+				stime=$1
+				;;
+			-b | --bits ) shift
+				bits=$1
+				;;
+		esac
+		shift
+	done
 
-  if [[ "$hname" == "0" ]] ; then 
+	if [[ "$hname" == "0" ]] ; then 
     hname=`hostname -f`
   fi
   if [[ "$filename" == "0" ]] ; then 
@@ -80,21 +80,23 @@ ssl ()
    email=`echo $email | sed -e 's/\@/\\\\@/g'`
    echo $email
    sed -i "s/\(^emailAddress.*\=\)$/\1\ $email/" certs/*
-   if [ ! -f ip_info ] ; then 
-      wget -q -t 3 http://www.liveipmap.com/ -O ip_info
-   fi
+   # if [ ! -f ip_info ] ; then 
+   #   wget -q -t 3 http://www.liveipmap.com/ -O ip_info
+   # fi
    # Callout to get the country and parse
-   . ./country
-   getcountry
+   # . ./country
+   #getcountry
+   country='US'
    sed -i "s/\(countryName.*\=\)$/\1\ $country/" certs/*
 
    # Callout to get the state and parse
-   . ./state
-   getstate
+   #. ./state
+   # getstate
+   state='NY'
    sed -i "s/\(stateOrProvinceName.*\=\)$/\1\ $state/" certs/*
 
    # Callout to get the city, don't bother parsing
-   city=`cat ip_info | grep -i city -C 1 | tail -1 | sed 's/^.*[\<]td[\>]\(.*\)[\<]\/td[\>].*$/\U\1/g'`
+   city='BUFFALO'
    sed -i "s/\(localityName.*\=\)$/\1\ $city/" certs/*
 
    mkdir certs/signedcerts
@@ -124,3 +126,4 @@ ssl ()
 
 # Testing out the generator
 # ssl -t 365 -s 31 -b 1024 -p youaregoingtodie -h door.d3fy.net
+ssl -h git.d3fy.net -p secretpassword
