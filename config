@@ -4,7 +4,6 @@ config ()
    echo "
 [ ca ]
 default_ca = local_ca
-#
 [ local_ca ]
 dir = ssldir
 certificate = ssldir/cacert.pem
@@ -12,21 +11,11 @@ database = ssldir/index.txt
 new_certs_dir = ssldir/signedcerts
 private_key = ssldir/private/cakey.pem
 serial = ssldir/serial
-#
-#
-# Default expiration and encryption policies for certificates.
-#
 default_crl_days = 3000
 default_days =
-default_md = md5 # Over 9 thousand!
-#
+default_md = md5
 policy = local_ca_policy
 x509_extensions = local_ca_extensions
-#
-#
-# Default policy to use when generating server certificates. The following
-# fields must be defined in the server certificate.
-#
 [ local_ca_policy ]
 commonName = supplied
 localityName = supplied
@@ -36,31 +25,17 @@ localityName = supplied
 emailAddress = supplied
 organizationName = supplied
 organizationalUnitName = supplied
-#
-#
-# x509 extensions to use when generating server certificates.
-#
 [ local_ca_extensions ]
 subjectAltName = DNS:hhname
 basicConstraints = CA:false
 nsCertType = server
-#
-#
-# The default root certificate generation policy.
-#
 [ req ]
 default_bits =
 default_keyfile = ssldir/private/cakey.pem
 default_md = md5
-#
 prompt = no
 distinguished_name = root_ca_distinguished_name
 x509_extensions = root_ca_extensions
-#
-#
-# Root Certificate Authority distinguished name. Change these fields to match
-# your local environment!
-#
 [ root_ca_distinguished_name ]
 commonName = hhname
 localityName =
@@ -69,16 +44,11 @@ countryName =
 emailAddress =
 organizationName =
 organizationalUnitName = IT
-#
 [ root_ca_extensions ]
 basicConstraints = CA:true
 " > certs/caconfig.cnf
 
 echo "
-#
-# exampleserver.cnf
-#
-
 [ req ]
 prompt = no
 distinguished_name = server_distinguished_name
