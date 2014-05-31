@@ -10,8 +10,8 @@ ssl ()
 	while [ "$1" != "" ]; do
 		case $1 in
 			-p | --password ) shift
-                              password=$1
-                              ;;
+				password=$1
+				;;
 			-h | --hostname ) shift
 				hname=$1
 				;;
