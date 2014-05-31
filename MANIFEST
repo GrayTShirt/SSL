@@ -1,3 +1,4 @@
 Makefile.PL
 MANIFEST
+LICENSE
 lib/D3fy/SSL.pm
