@@ -31,21 +31,9 @@ ssl ()
 		shift
 	done
 
-	if [[ "$hname" == "0" ]] ; then 
-		hname=`hostname -f`
-	fi
 	if [[ "$filename" == "0" ]] ; then 
 		filename="server"
 	fi
-
-	if [[ ! -e certs ]]; then
-	mkdir certs
-	fi
-
-	pwd
-	# set up the configuration files
-	. ./config
-	config $hname
 
 	# Set the static file path in the script
 	sdir=`pwd -P`/certs
@@ -112,7 +100,3 @@ ssl ()
 	rm -f tempkey.pem && rm -f tempreq.pem
 	cd ../../
 }
-
-# Testing out the generator
-# ssl -t 365 -s 31 -b 1024 -p youaregoingtodie -h door.d3fy.net
-ssl -h git.d3fy.net -p secretpassword
