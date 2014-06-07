@@ -22,6 +22,17 @@ sub configure
 	$OPTION->{ca_expire}     ||= 365;
 	$OPTION->{server_expire} ||= 30;
 	$OPTION->{bits}          ||= 4096;
+	$OPTION->{state}         ||= "NY";
+	$OPTION->{contry}        ||= "US";
+	$OPTION->{locality}      ||= 'BUFFALO';
+	$OPTION->{unit}          ||= 'IT';
+	$OPTION->{email}         ||= 'ADMIN'.uc $OPTION->{cert_name};
+	if(!$OPTION->{org}) {
+		$OPTION->{org} ||=  $OPTION->{cert_name};
+		$OPTION->{org}   =~ s/\.[A-Za-z0-9]+$//;
+		$OPTION->{org}   =  uc $OPTION->{org};
+		$OPTION->{org}   =~ s/\./_/g;
+	}
 
 	die "Certs dir must be a full path" unless $OPTION->{dir} =~ m/^\//;
 	if (!-e $OPTION->{dir}) {
@@ -44,7 +55,7 @@ sub configure
 	close $fh
 		or die "Unable to close $OPTION->{dir}/index.txt file: $!";
 
-	my $global = <<EOF
+	my $global = <<EOF;
 [ ca ]
 default_ca = local_ca
 [ local_ca ]
@@ -81,35 +92,37 @@ distinguished_name = root_ca_distinguished_name
 x509_extensions    = root_ca_extensions
 [ root_ca_distinguished_name ]
 commonName             = $OPTION->{cert_name}
-localityName           =
-stateOrProvinceName    =
-countryName            =
-emailAddress           =
-organizationName       =
-organizationalUnitName = IT
+localityName           = $OPTION->{locality}
+stateOrProvinceName    = $OPTION->{state}
+countryName            = $OPTION->{contry}
+emailAddress           = $OPTION->{email}
+organizationName       = $OPTION->{org}
+organizationalUnitName = $OPTION->{unit}
 [ root_ca_extensions ]
 basicConstraints = CA:true
 EOF
+
 	open $fh, ">", "$OPTION->{dir}/ca_config.cnf"
 		or die "Unable to open $OPTION->{dir}/ca_config.cnf file: $!";
 	print $fh $global;
 	close $fh
 		or die "Unable to close $OPTION->{dir}/ca_config.cnf file: $!";
 
-	my $server_config = <<EOF
+	my $server_config = <<EOF;
 [ req ]
 prompt             = no
 distinguished_name = server_distinguished_name
 
 [ server_distinguished_name ]
 commonName             = $OPTION->{cert_name}
-localityName           =
-stateOrProvinceName    =
-countryName            =
-emailAddress           =
-organizationName       =
-organizationalUnitName = IT
+localityName           = $OPTION->{locality}
+stateOrProvinceName    = $OPTION->{state}
+countryName            = $OPTION->{contry}
+emailAddress           = $OPTION->{email}
+organizationName       = $OPTION->{org}
+organizationalUnitName = $OPTION->{unit}
 EOF
+
 	open $fh, ">", "$OPTION->{dir}/$OPTION->{cert_name}_config.cnf"
 		or die "Unable to open $OPTION->{dir}/$OPTION->{cert_name}_config.cnf file: $!";
 	print $fh $server_config;
@@ -124,6 +137,8 @@ EOF
 D3fy::SSL
 
 =head1 SYNOPSIS
+
+=head1 DESCRIPTION
 
 =cut
 
