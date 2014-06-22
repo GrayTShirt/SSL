@@ -26,7 +26,7 @@ sub configure
 	$OPTION->{contry}        ||= "US";
 	$OPTION->{locality}      ||= 'BUFFALO';
 	$OPTION->{unit}          ||= 'IT';
-	$OPTION->{email}         ||= 'ADMIN'.uc $OPTION->{cert_name};
+	$OPTION->{email}         ||= 'ADMIN@'.uc $OPTION->{cert_name};
 	if(!$OPTION->{org}) {
 		$OPTION->{org} ||=  $OPTION->{cert_name};
 		$OPTION->{org}   =~ s/\.[A-Za-z0-9]+$//;
@@ -128,6 +128,22 @@ EOF
 	print $fh $server_config;
 	close $fh
 		or die "Unable to close $OPTION->{dir}/$OPTION->{cert_name}_config.cnf file: $!";
+}
+
+sub generate
+{
+	$ENV{OPENSSL_CONF} = "./caconfig.cnf";
+	openssl req -x509 -newkey rsa:$bits -out cacert.pem -outform PEM -days $catime -passout pass:$password
+
+	openssl x509 -in cacert.pem -out $filename\_cacert.crt
+	$ENV{OPENSSL_CONF} = "./$hname.cnf";
+
+	openssl req -newkey rsa:$bits -keyout tempkey.pem -keyform PEM -out tempreq.pem -outform PEM -passout pass:$password
+	openssl rsa < tempkey.pem > $filename\_key.pem -passin pass:$password
+	$ENV{OPENSSL_CONF} = "./caconfig.cnf";
+
+	< response.txt openssl ca -in tempreq.pem -out $filename\_crt.pem -passin pass:$password
+
 }
 
 =pod
